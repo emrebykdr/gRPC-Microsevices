@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  order-service:
+    build:
+      context: .
+      dockerfile: order-service/Dockerfile
+    ports:
+      - "50051:50051"
+    environment:
+      - INVENTORY_HOST=inventory-service:50052
+      - NOTIFICATION_HOST=notification-service:50053
+    depends_on:
+      - inventory-service
+      - notification-service
+    networks:
+      - grpc-net
+    restart: on-failure
+
+  inventory-service:
+    build:
+      context: .
+      dockerfile: inventory-service/Dockerfile
+    ports:
+      - "50052:50052"
+    networks:
+      - grpc-net
+    restart: on-failure
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+    ports:
+      - "50053:50053"
+    networks:
+      - grpc-net
+    restart: on-failure
+
+networks:
+  grpc-net:
+    driver: bridge

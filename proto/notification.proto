@@ -1,0 +1,18 @@
+syntax = "proto3";
+package notification;
+
+service NotificationService {
+  rpc SendNotification (SendNotificationRequest) returns (SendNotificationResponse);
+}
+
+message SendNotificationRequest {
+  string customer_id = 1;
+  string order_id = 2;
+  string type = 3;            // "ORDER_CONFIRMED", "OUT_OF_STOCK"
+  string message = 4;
+}
+
+message SendNotificationResponse {
+  bool success = 1;
+  string notification_id = 2;
+}

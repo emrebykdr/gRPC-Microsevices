@@ -1,0 +1,33 @@
+syntax = "proto3";
+package order;
+
+service OrderService {
+  // Unary RPC: Tek istek, tek yanıt
+  rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+
+  // Server Streaming RPC: Tek istek, çoklu yanıt akışı
+  rpc TrackOrder (TrackOrderRequest) returns (stream OrderStatusUpdate);
+}
+
+message CreateOrderRequest {
+  string product_id = 1;    // Ürün kimliği
+  int32 quantity = 2;        // Sipariş miktarı
+  string customer_id = 3;    // Müşteri kimliği
+}
+
+message CreateOrderResponse {
+  string order_id = 1;       // Üretilen sipariş ID
+  string status = 2;         // "CONFIRMED" veya "FAILED"
+  string message = 3;        // Detay mesajı
+}
+
+message TrackOrderRequest {
+  string order_id = 1;
+}
+
+message OrderStatusUpdate {
+  string order_id = 1;
+  string status = 2;         // RECEIVED, PROCESSING, SHIPPED, DELIVERED
+  string timestamp = 3;
+  string detail = 4;
+}
