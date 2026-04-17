@@ -21,7 +21,11 @@ The ecosystem consists of three independent microservices that communicate stric
 ### Key Features
 - **Polyglot Design:** Node.js and Python running cohesively.
 - **Strict Typing:** `.proto` schema definitions ensure cross-service safety.
-- **Server Streaming:** Real-time stream simulations.
+- **Server Streaming:** Real-time stream simulations for tracking.
+- **Client Streaming:** Bulk ordering simulation.
+- **Bidirectional Streaming:** Real-time dual-way communication (Chat).
+- **Benchmark:** Built-in tool to compare gRPC vs REST performance.
+- **gRPC-Web (Browser):** Direct browser access via Envoy Proxy.
 - **Call Chain:** Cross-service interconnectivity (Order → Inventory → Notification).
 - **Error Handling:** Compliant with gRPC Status Codes (`NOT_FOUND`, `FAILED_PRECONDITION`).
 - **Health Checks:** Native gRPC Health Check endpoint implementation.
@@ -34,11 +38,20 @@ The ecosystem consists of three independent microservices that communicate stric
 ```bash
 docker-compose up --build -d
 ```
-3. **Run E2E Evalaution/Tests:**
-In a separate terminal, trigger the evaluation client to simulate 4 different scenarios:
 ```bash
 docker-compose exec order-service node client.js
 ```
+
+4. **Run REST vs gRPC Benchmark:**
+Compare performance between gRPC and a standard REST API:
+```bash
+node benchmark.js
+```
+
+5. **Browser Access (gRPC-Web):**
+Open your browser and navigate to:
+`http://localhost:8081` - Direct gRPC calls from the browser console!
+
 
 ---
 
@@ -60,6 +73,10 @@ Sistem, `Unary RPC` ve `Server Streaming` metotlarını kullanarak izole bir kö
 - **Çoklu Dil (Polyglot):** Node.js ve Python'ın birlikte ahenkle çalışması.
 - **Kesin Tipler:** Güçlü `.proto` şema sözleşmeleri ile veri sızıntısının önlenmesi.
 - **Server Streaming:** Anlık sipariş kargo durumu takibi akışı (Streaming).
+- **Client Streaming:** Toplu sipariş oluşturma (İstemciden sunucuya akış).
+- **Bidirectional Streaming:** Karşılıklı anlık mesajlaşma/chat simülasyonu.
+- **Benchmark:** gRPC ve REST API arasındaki devasa performans farkını ölçen araç.
+- **gRPC-Web (Tarayıcı):** Envoy Proxy üzerinden doğrudan tarayıcı desteği.
 - **Çağrı Zinciri (Call Chain):** Birbirine bağımlı kararlar alan servis ağı (Order → Inventory → Notification).
 - **Graceful Error Handling:** Yetersiz stok ve bulunamayan ürünler için gRPC Statü kodlarına dayalı zararsız hata fırlatımı.
 - **Sağlık Kontrolü (Health Checks):** Her servis için standarda uygun `SERVING` kontrol paneli.
@@ -73,8 +90,17 @@ Terminal klasörde açıkken uygulamayı docker üzerinden izole bir şekilde in
 ```bash
 docker-compose up --build -d
 ```
-3. **Testleri ve Akışı Gözlemleyin:**
-Sistem sağlıklı bir şekilde ayağa kalktıktan sonra, 4 farklı başarılı, başarısız ve stream (akış) senaryosunu denemek için internal testi tetikleyin:
 ```bash
 docker-compose exec order-service node client.js
 ```
+
+4. **Performans Testi (Benchmark):**
+gRPC'nin REST'ten ne kadar hızlı olduğunu kendi gözlerinizle görün:
+```bash
+node benchmark.js
+```
+
+5. **Tarayıcı Desteği (gRPC-Web):**
+Şu adrese gidin:
+`http://localhost:8081` - Tarayıcı üzerinden Envoy Proxy kullanarak gRPC çağrısı yapın.
+

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>gRPC-Web Test Client</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: system-ui; max-width: 600px; margin: 40px auto; text-align: center; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    #result { margin-top: 20px; font-weight: bold; font-size: 18px; padding: 15px; border-radius: 8px; background: #f0f0f0;}
+  </style>
+</head>
+<body>
+  <h2>Tarayıcıdan doğrudan gRPC Çağrısı (Envoy Proxy Üzerinden)</h2>
+  <button onclick="createOrder()">Sipariş Oluştur (gRPC-Web)</button>
+  <p id="result">İşlem bekleniyor...</p>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "frontend",
+  "dependencies": {
+    "google-protobuf": "^3.21.2",
+    "grpc-web": "^1.5.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.4",
+    "http-server": "^14.1.1"
+  }
+}

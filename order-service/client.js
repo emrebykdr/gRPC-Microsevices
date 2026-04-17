@@ -52,7 +52,8 @@ orderClient.CreateOrder({
         });
 
         stream.on('end', () => {
-          console.log("[STREAM] Takip tamamlandı");
+          console.log("[STREAM] Takip tamamlandı\n");
+          runClientStreamingTest();
         });
 
         stream.on('error', (err) => {
@@ -61,3 +62,47 @@ orderClient.CreateOrder({
     });
   });
 });
+
+function runClientStreamingTest() {
+  console.log("[TEST 5] BulkCreateOrders (Client Streaming) başlatılıyor...");
+  const call = orderClient.BulkCreateOrders((err, response) => {
+    if (err) console.error("[TEST 5 HATA]", err.message);
+    else console.log("[TEST 5 BAŞARILI] Toplu sipariş sonucu:", response, "\n");
+    
+    runBidirectionalStreamingTest();
+  });
+
+  // Client gönderimi
+  call.write({ product_id: "PROD-001", quantity: 5, customer_id: "CUST-A" });
+  call.write({ product_id: "PROD-002", quantity: 0, customer_id: "CUST-B" }); // Başarısız sayılacak (qty=0)
+  call.write({ product_id: "PROD-004", quantity: 1, customer_id: "CUST-A" });
+  
+  // İşlemleri bitirdik
+  call.end();
+}
+
+function runBidirectionalStreamingTest() {
+  console.log("[TEST 6] LiveOrderChat (Bidirectional Streaming) başlatılıyor...");
+  const call = orderClient.LiveOrderChat();
+
+  call.on('data', (response) => {
+    console.log(`[CHAT CEVAP] ${response.user}: ${response.message} (${response.timestamp})`);
+  });
+
+  call.on('end', () => {
+    console.log("[CHAT] Sunucu bağlantıyı kapattı.");
+  });
+
+  call.on('error', (err) => {
+    console.error("[CHAT HATA]", err);
+  });
+
+  // 1. mesaj
+  call.write({ user: "Alice", message: "Siparişim nerede kaldı?" });
+  
+  // 2. mesaj
+  setTimeout(() => {
+    call.write({ user: "Alice", message: "Adresimi değiştirmek istiyorum." });
+    call.end(); // İletişimi sonlandır
+  }, 1000);
+}

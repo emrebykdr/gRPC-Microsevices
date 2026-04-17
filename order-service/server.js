@@ -3,6 +3,7 @@ const protoLoader = require('@grpc/proto-loader');
 const { HealthImplementation } = require('grpc-health-check');
 const { ReflectionService } = require('@grpc/reflection');
 const path = require('path');
+const express = require('express');
 
 const ORDER_PROTO_PATH = path.join(__dirname, '../proto/order.proto');
 const INVENTORY_PROTO_PATH = path.join(__dirname, '../proto/inventory.proto');
@@ -90,9 +91,46 @@ function TrackOrder(call) {
   }, 2000);
 }
 
+function BulkCreateOrders(call, callback) {
+  let totalOrders = 0;
+  let successfulOrders = 0;
+  let failedOrders = 0;
+
+  call.on('data', (request) => {
+    totalOrders++;
+    if (request.quantity > 0) successfulOrders++;
+    else failedOrders++;
+  });
+
+  call.on('end', () => {
+    callback(null, {
+      total_orders: totalOrders,
+      successful_orders: successfulOrders,
+      failed_orders: failedOrders,
+      summary_message: "Toplu sipariş aktarımı başarıyla tamamlandı."
+    });
+  });
+}
+
+function LiveOrderChat(call) {
+  call.on('data', (message) => {
+    console.log(`[CHAT] İstemci (${message.user}): ${message.message}`);
+    
+    call.write({
+      user: "System",
+      message: `Merhaba ${message.user}, '${message.message}' mesajınızı aldık. İlgileniyoruz.`,
+      timestamp: new Date().toISOString()
+    });
+  });
+
+  call.on('end', () => {
+    call.end();
+  });
+}
+
 function main() {
   const server = new grpc.Server();
-  server.addService(orderProto.OrderService.service, { CreateOrder, TrackOrder });
+  server.addService(orderProto.OrderService.service, { CreateOrder, TrackOrder, BulkCreateOrders, LiveOrderChat });
 
   const healthImpl = new HealthImplementation({
     "order.OrderService": "SERVING",
@@ -107,6 +145,31 @@ function main() {
   server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
     console.log("Order Service started on port 50051");
     server.start();
+  });
+
+  // REST API Sunucusu (Benchmark icn)
+  const app = express();
+  app.use(express.json());
+
+  app.post('/api/orders', (req, res) => {
+    const { product_id, quantity, customer_id } = req.body;
+    const deadline = new Date();
+    deadline.setSeconds(deadline.getSeconds() + 5);
+
+    inventoryClient.ReduceStock({ product_id, quantity }, { deadline }, (err, response) => {
+      if (err) {
+        return res.status(400).json({ status: "FAILED", error: err.message });
+      }
+      res.json({
+        order_id: `ORD-REST-${Math.floor(Math.random() * 10000)}`,
+        status: "CONFIRMED",
+        message: "Sipariş REST üzerinden başarıyla oluşturuldu"
+      });
+    });
+  });
+
+  app.listen(3001, '0.0.0.0', () => {
+    console.log("Order Service (REST API) started on port 3000");
   });
 }
 

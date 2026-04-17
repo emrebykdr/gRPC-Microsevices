@@ -7,6 +7,7 @@ services:
       dockerfile: order-service/Dockerfile
     ports:
       - "50051:50051"
+      - "3001:3001"
     environment:
       - INVENTORY_HOST=inventory-service:50052
       - NOTIFICATION_HOST=notification-service:50053
@@ -36,6 +37,27 @@ services:
     networks:
       - grpc-net
     restart: on-failure
+
+  envoy:
+    image: envoyproxy/envoy:v1.31.0
+    ports:
+      - "8080:8080"
+      - "9901:9901"
+    volumes:
+      - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    networks:
+      - grpc-net
+    depends_on:
+      - order-service
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - grpc-net
 
 networks:
   grpc-net:

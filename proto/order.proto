@@ -7,6 +7,12 @@ service OrderService {
 
   // Server Streaming RPC: Tek istek, çoklu yanıt akışı
   rpc TrackOrder (TrackOrderRequest) returns (stream OrderStatusUpdate);
+
+  // Client Streaming RPC: Çoklu istek, tek yanıt
+  rpc BulkCreateOrders (stream CreateOrderRequest) returns (BulkOrderSummary);
+
+  // Bidirectional Streaming RPC: Çoklu istek, çoklu yanıt (karşılıklı akış)
+  rpc LiveOrderChat (stream ChatMessage) returns (stream ChatMessage);
 }
 
 message CreateOrderRequest {
@@ -30,4 +36,19 @@ message OrderStatusUpdate {
   string status = 2;         // RECEIVED, PROCESSING, SHIPPED, DELIVERED
   string timestamp = 3;
   string detail = 4;
+}
+
+// Client Streaming Yanıtı
+message BulkOrderSummary {
+  int32 total_orders = 1;
+  int32 successful_orders = 2;
+  int32 failed_orders = 3;
+  string summary_message = 4;
+}
+
+// Bidirectional Streaming Mesajı
+message ChatMessage {
+  string user = 1;
+  string message = 2;
+  string timestamp = 3;
 }

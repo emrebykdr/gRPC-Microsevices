@@ -15,6 +15,7 @@
     "@grpc/grpc-js": "^1.14.3",
     "@grpc/proto-loader": "^0.8.0",
     "@grpc/reflection": "^1.0.4",
+    "express": "^5.2.1",
     "grpc-health-check": "^2.1.0"
   }
 }
