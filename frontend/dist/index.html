@@ -1,18 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
+
 <head>
-  <title>gRPC-Web Test Client</title>
-  <meta charset="UTF-8">
-  <style>
-    body { font-family: system-ui; max-width: 600px; margin: 40px auto; text-align: center; }
-    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
-    #result { margin-top: 20px; font-weight: bold; font-size: 18px; padding: 15px; border-radius: 8px; background: #f0f0f0;}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gRPC Microservices Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-  <h2>Tarayıcıdan doğrudan gRPC Çağrısı (Envoy Proxy Üzerinden)</h2>
-  <button onclick="createOrder()">Sipariş Oluştur (gRPC-Web)</button>
-  <p id="result">İşlem bekleniyor...</p>
-  <script src="main.js"></script>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <main class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Microservices Control Panel</h1>
+            <p class="subtitle">Real-time gRPC-Web monitoring and interaction</p>
+        </header>
+
+        <section class="product-list-section">
+            <div class="card-header">
+                <h2>Product Catalog</h2>
+                <button class="primary-btn refresh-btn" onclick="listProducts()">Yenile</button>
+            </div>
+            <div class="product-grid" id="product-grid">
+                <!-- Products will be injected here -->
+                <div class="loading-spinner">Ürünler yükleniyor...</div>
+            </div>
+        </section>
+
+        <div class="grid-layout">
+            <!-- Order Service Card -->
+            <section class="service-card" id="order-service">
+                <div class="card-header">
+                    <div class="status-indicator online"></div>
+                    <h2>Order Service</h2>
+                </div>
+                <div class="card-content">
+                    <div class="input-group">
+                        <label for="order-product-id">Ürün ID</label>
+                        <input type="text" id="order-product-id" placeholder="PROD-001" value="PROD-001">
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="order-quantity">Miktar</label>
+                            <input type="number" id="order-quantity" value="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="order-customer-id">Müşteri ID</label>
+                            <input type="text" id="order-customer-id" placeholder="CUST-001" value="CUST-BROWSER">
+                        </div>
+                    </div>
+                    <button class="primary-btn" onclick="createOrder()">Sipariş Oluştur</button>
+
+                    <div class="streaming-controls">
+                        <h3>Streaming Tests</h3>
+                        <div class="btn-group">
+                            <button class="secondary-btn" onclick="trackOrder()">Track</button>
+                            <button class="secondary-btn" onclick="bulkCreate()">Bulk</button>
+                            <button class="secondary-btn" onclick="liveChat()">Chat</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer" id="order-result-container">
+                    <pre id="order-result">İşlem bekleniyor...</pre>
+                </div>
+            </section>
+
+            <!-- Inventory Service Card -->
+            <section class="service-card" id="inventory-service">
+                <div class="card-header">
+                    <div class="status-indicator online"></div>
+                    <h2>Inventory Service</h2>
+                </div>
+                <div class="card-content">
+                    <div class="input-group">
+                        <label for="inventory-product-id">Ürün ID</label>
+                        <input type="text" id="inventory-product-id" placeholder="PROD-001" value="PROD-001">
+                    </div>
+                    <div class="btn-group horizontal">
+                        <button class="primary-btn" onclick="checkStock()">Stok Kontrol</button>
+                        <button class="danger-btn" onclick="reduceStock()">Stok Düş</button>
+                    </div>
+                </div>
+                <div class="card-footer" id="inventory-result-container">
+                    <pre id="inventory-result">İşlem bekleniyor...</pre>
+                </div>
+            </section>
+
+            <!-- Notification Service Card -->
+            <section class="service-card" id="notification-service">
+                <div class="card-header">
+                    <div class="status-indicator online"></div>
+                    <h2>Notification Service</h2>
+                </div>
+                <div class="card-content">
+                    <div class="input-group">
+                        <label for="notif-customer-id">Müşteri ID</label>
+                        <input type="text" id="notif-customer-id" value="CUST-BROWSER">
+                    </div>
+                    <div class="input-group">
+                        <label for="notif-message">Mesaj</label>
+                        <textarea id="notif-message" rows="2">Manuel test bildirimi</textarea>
+                    </div>
+                    <button class="primary-btn" onclick="sendNotification()">Bildirim Gönder</button>
+                </div>
+                <div class="card-footer" id="notification-result-container">
+                    <pre id="notification-result">İşlem bekleniyor...</pre>
+                </div>
+            </section>
+
+            <!-- Add Product Card -->
+            <section class="service-card" id="add-product-service">
+                <div class="card-header">
+                    <div class="status-indicator online"></div>
+                    <h2>Add New Product</h2>
+                </div>
+                <div class="card-content">
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="add-product-id">Ürün ID</label>
+                            <input type="text" id="add-product-id" placeholder="PROD-004">
+                        </div>
+                        <div class="input-group">
+                            <label for="add-product-name">Ürün Adı</label>
+                            <input type="text" id="add-product-name" placeholder="Keyboard Pro">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="add-product-qty">Başlangıç Stok</label>
+                            <input type="number" id="add-product-qty" value="10">
+                        </div>
+                        <div class="input-group">
+                            <label for="add-product-price">Fiyat ($)</label>
+                            <input type="number" id="add-product-price" value="49.99" step="0.01">
+                        </div>
+                    </div>
+                    <button class="primary-btn" onclick="addProduct()">Ürün Ekle</button>
+                </div>
+                <div class="card-footer" id="add-product-result-container">
+                    <pre id="add-product-result">Yeni ürün detaylarını girin...</pre>
+                </div>
+            </section>
+        </div>
+
+        <section class="live-logs">
+            <div class="card-header">
+                <h2>Real-time Stream Logs</h2>
+                <button class="clear-btn" onclick="clearLogs()">Temizle</button>
+            </div>
+            <div class="log-viewport" id="log-viewport">
+                <div class="log-entry system">Sistem hazır. Lütfen bir işlem seçin.</div>
+            </div>
+        </section>
+    </main>
+
+    <script src="main.js"></script>
 </body>
+
 </html>

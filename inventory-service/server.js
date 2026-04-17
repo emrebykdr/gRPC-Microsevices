@@ -65,9 +65,39 @@ function ReduceStock(call, callback) {
   });
 }
 
+function ListProducts(call, callback) {
+  const products = [];
+  stockMap.forEach((value, key) => {
+    products.push({
+      product_id: key,
+      name: value.name,
+      quantity: value.quantity,
+      price: value.price
+    });
+  });
+  callback(null, { products });
+}
+
+function AddProduct(call, callback) {
+  const { product_id, name, quantity, price } = call.request;
+  
+  if (stockMap.has(product_id)) {
+    return callback({
+      code: grpc.status.ALREADY_EXISTS,
+      message: `Bu ürün zaten kayıtlı: ${product_id}`
+    });
+  }
+
+  stockMap.set(product_id, { name, quantity, price });
+  callback(null, {
+    success: true,
+    message: `Ürün başarıyla eklendi: ${name}`
+  });
+}
+
 function main() {
   const server = new grpc.Server();
-  server.addService(inventoryProto.InventoryService.service, { CheckStock, ReduceStock });
+  server.addService(inventoryProto.InventoryService.service, { CheckStock, ReduceStock, ListProducts, AddProduct });
 
   const healthImpl = new HealthImplementation({
     "inventory.InventoryService": "SERVING",

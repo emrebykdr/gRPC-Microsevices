@@ -16,7 +16,7 @@ COPY proto /proto
 
 # Generate stubs
 RUN mkdir -p generated
-RUN protoc -I=/proto /proto/order.proto \
+RUN protoc -I=/proto /proto/order.proto /proto/inventory.proto /proto/notification.proto \
     --js_out=import_style=commonjs,binary:./generated \
     --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./generated
 

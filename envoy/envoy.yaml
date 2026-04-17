@@ -21,12 +21,18 @@ static_resources:
             - name: local_service
               domains: ["*"]
               routes:
-              - match: { prefix: "/" }
+              - match: { prefix: "/order.OrderService/" }
                 route:
                   cluster: order_service
                   timeout: 0s
-                  max_stream_duration:
-                    grpc_timeout_header_max: 0s
+              - match: { prefix: "/inventory.InventoryService/" }
+                route:
+                  cluster: inventory_service
+                  timeout: 0s
+              - match: { prefix: "/notification.NotificationService/" }
+                route:
+                  cluster: notification_service
+                  timeout: 0s
               cors:
                 allow_origin_string_match:
                 - safe_regex:
@@ -53,7 +59,7 @@ static_resources:
     http2_protocol_options: {}
     lb_policy: round_robin
     load_assignment:
-      cluster_name: cluster_0
+      cluster_name: order_service
       endpoints:
         - lb_endpoints:
             - endpoint:
@@ -61,3 +67,31 @@ static_resources:
                   socket_address:
                     address: order-service
                     port_value: 50051
+  - name: inventory_service
+    connect_timeout: 0.25s
+    type: logical_dns
+    http2_protocol_options: {}
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: inventory_service
+      endpoints:
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: inventory-service
+                    port_value: 50052
+  - name: notification_service
+    connect_timeout: 0.25s
+    type: logical_dns
+    http2_protocol_options: {}
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: notification_service
+      endpoints:
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: notification-service
+                    port_value: 50053

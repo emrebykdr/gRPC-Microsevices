@@ -4,6 +4,33 @@ package inventory;
 service InventoryService {
   rpc CheckStock (CheckStockRequest) returns (CheckStockResponse);
   rpc ReduceStock (ReduceStockRequest) returns (ReduceStockResponse);
+  rpc ListProducts (ListProductsRequest) returns (ListProductsResponse);
+  rpc AddProduct (AddProductRequest) returns (AddProductResponse);
+}
+
+message ListProductsRequest {}
+
+message AddProductRequest {
+  string product_id = 1;
+  string name = 2;
+  int32 quantity = 3;
+  double price = 4;
+}
+
+message AddProductResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message Product {
+  string product_id = 1;
+  string name = 2;
+  int32 quantity = 3;
+  double price = 4;
+}
+
+message ListProductsResponse {
+  repeated Product products = 1;
 }
 
 message CheckStockRequest {
