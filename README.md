@@ -6,84 +6,148 @@
 
 ## <a name="english"></a>🇬🇧 English
 
-### 🌟 Overview
-This project is a high-performance, **polyglot microservices ecosystem** featuring a premium **Glassmorphism Dashboard**. It demonstrates the power of **gRPC** and **Protocol Buffers** for seamless service-to-service communication and **gRPC-Web** for direct browser interaction via **Envoy Proxy**.
+### 1. Project Name & Description
+**gRPC Microservices Ecosystem**
+A high-performance, polyglot (Node.js & Python) microservices architecture integrated with a modern Glassmorphism Web Dashboard via Envoy Proxy. This project demonstrates real-time data streaming, cross-language binary communication, and containerized orchestration.
 
-### 🛠 Architecture & Tech Stack
-The system consists of independent services running in an isolated Docker network:
+### 2. Screenshot / Demo
+![Dashboard Preview](https://via.placeholder.com/800x450?text=Glassmorphism+gRPC+Dashboard+Preview)
+*(Note: Replace this with your actual dashboard screenshot at localhost:8081)*
 
-| Service | Technology | Role |
-|---------|------------|------|
-| **Frontend** | HTML5/CSS3/JS | Premium Dashboard for real-time interaction. |
-| **Envoy Proxy** | C++ / YAML | Translates gRPC-Web (HTTP/1.1) to Native gRPC (HTTP/2). |
-| **Order Service** | Node.js | Orchestrates orders and handles streaming status updates. |
-| **Inventory Service**| Node.js | Manages stock, dynamic product creation, and listing. |
-| **Notification** | Python | Polyglot worker sending cross-language binary alerts. |
+### 3. Technologies Used
+- **Backend:** Node.js (Order & Inventory Services), Python (Notification Service)
+- **Communication:** gRPC, Protocol Buffers (proto3)
+- **Proxy/Gateway:** Envoy Proxy (gRPC-Web translation)
+- **Frontend:** HTML5, Vanilla CSS (Glassmorphism), JavaScript (gRPC-Web client)
+- **Orchestration:** Docker, Docker Compose
+- **Tools:** Postman (gRPC testing), Webpack (Frontend bundling)
 
-### ✨ Key Features
-- **Modern Dashboard:** Interact with all services through a sleek, responsive UI at `localhost:8081`.
-- **Live Product Catalog:** Dynamically add, list, and manage products with real-time UI updates.
-- **Full Streaming Support:** 
-    - **Server Streaming:** Track orders in real-time.
-    - **Client/Bidi Streaming:** Supported via native clients (Postman/Node) for high-throughput scenarios.
-- **Error Resilience:** Implements standard gRPC status codes (`NOT_FOUND`, `FAILED_PRECONDITION`).
-- **Polyglot Communication:** Seamless binary data exchange between Node.js and Python.
-- **Performance Benchmarking:** Compare gRPC vs REST speeds with the built-in `benchmark.js`.
+### 4. Installation Steps
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/emrebykdr/gRPC-Microsevices.git
+   cd gRPC-Microsevices
+   ```
+2. **Ensure Docker is installed:** Download from [docker.com](https://www.docker.com/).
+3. **Generate Proto Stubs (Automatic):** The Docker build process handles this using `protoc`.
 
-### 🚀 Getting Started
-
-1. **Launch everything with Docker:**
+### 5. How to Run
+1. **Start all services:**
    ```bash
    docker-compose up --build -d
    ```
-2. **Access the Dashboard:**
+2. **Access the Web Dashboard:**
    Open [http://localhost:8081](http://localhost:8081) in your browser.
-
-3. **Test with Native Client:**
+3. **Test with Terminal Client:**
    ```bash
    docker-compose exec order-service node client.js
    ```
+4. **Benchmark (REST vs gRPC):**
+   ```bash
+   node benchmark.js
+   ```
+
+### 6. Project Structure
+- `proto/`: Shared `.proto` definitions for all services.
+- `order-service/`: Node.js service for order orchestration (Port 50051).
+- `inventory-service/`: Node.js service for stock and product management (Port 50052).
+- `notification-service/`: Python service for cross-language alerts (Port 50053).
+- `envoy/`: Configuration for the gRPC-Web to Native gRPC bridge.
+- `frontend/`: Web Dashboard source and gRPC-Web logic.
+
+### 7. Key Features
+- **Polyglot Communication:** Seamless binary exchange between Node.js and Python.
+- **Glassmorphism UI:** Modern, responsive control panel for microservices.
+- **Dynamic Inventory:** Real-time product creation and listing.
+- **Real-time Tracking:** Server streaming for order status updates.
+- **Error Handling:** Full implementation of gRPC status codes.
+
+### 8. Challenges & Solutions
+- **Challenge:** Browsers do not support HTTP/2 trailers required by gRPC.
+- **Solution:** Integrated **Envoy Proxy** to translate gRPC-Web requests into native gRPC calls.
+- **Challenge:** Sharing `.proto` files across different language containers in Docker.
+- **Solution:** Used **Docker Bind Mounts** and multi-stage builds to ensure all services access the same source of truth.
+
+### 9. Resources
+- [gRPC Official Documentation](https://grpc.io/docs/)
+- [Envoy Proxy gRPC-Web Filter](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/grpc_web_filter)
+- [Protocol Buffers Language Guide](https://developers.google.com/protocol-buffers/docs/proto3)
+- [Google Fonts (Inter)](https://fonts.google.com/specimen/Inter)
+
+### 10. License
+Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
 ## <a name="türkçe"></a>🇹🇷 Türkçe
 
-### 🌟 Genel Bakış
-Bu proje; yüksek performanslı, **poli-glot (çok dilli) mikroservis mimarisini** ve premium bir **Glassmorphism Dashboard** arayüzünü bir araya getirir. **gRPC** ve **Protocol Buffers**'ın servisler arası iletişim gücünü, **Envoy Proxy** üzerinden **gRPC-Web** ile tarayıcıya taşır.
+### 1. Proje Adı ve Kısa Açıklama
+**gRPC Mikroservis Ekosistemi**
+Node.js ve Python ile inşa edilmiş, modern bir Glassmorphism Web Dashboard üzerinden Envoy Proxy aracılığıyla yönetilen, yüksek performanslı poli-glot mikroservis mimarisidir. Gerçek zamanlı veri akışı (streaming) ve diller arası ikili (binary) iletişimi gösterir.
 
-### 🛠 Mimari ve Teknoloji Yığını
-Sistem, izole bir Docker ağında çalışan bağımsız servislerden oluşur:
+### 2. Ekran Görüntüsü / Demo
+![Dashboard Önizleme](https://via.placeholder.com/800x450?text=Glassmorphism+gRPC+Dashboard+Görünümü)
+*(Not: Bu alanı localhost:8081 adresindeki ekran görüntünüzle değiştirin)*
 
-| Servis | Teknoloji | Görev |
-|--------|-----------|-------|
-| **Frontend** | HTML5/CSS3/JS | Gerçek zamanlı etkileşim için modern kontrol paneli. |
-| **Envoy Proxy**| C++ / YAML | gRPC-Web (HTTP/1.1) ve Native gRPC (HTTP/2) arasında köprü. |
-| **Order Service**| Node.js | Sipariş akışını yönetir ve kargo durumu akışı sağlar. |
-| **Inventory** | Node.js | Stok yönetimi, dinamik ürün ekleme ve listeleme yapar. |
-| **Notification** | Python | Çok dilli yapıda, diller arası (cross-language) bildirimler yollar. |
+### 3. Kullanılan Teknolojiler
+- **Backend:** Node.js (Order & Inventory), Python (Notification)
+- **İletişim:** gRPC, Protocol Buffers (proto3)
+- **Proxy/Gateway:** Envoy Proxy (gRPC-Web dönüşümü)
+- **Frontend:** HTML5, Vanilla CSS (Glassmorphism), JavaScript (gRPC-Web istemcisi)
+- **Orkestrasyon:** Docker, Docker Compose
+- **Araçlar:** Postman (gRPC testi), Webpack (Frontend paketleme)
 
-### ✨ Öne Çıkan Özellikler
-- **Modern Dashboard:** Tüm servislerle `localhost:8081` adresindeki şık ve duyarlı arayüz üzerinden etkileşime geçin.
-- **Canlı Ürün Kataloğu:** Dinamik olarak ürün ekleyin, listeleyin ve stokları anlık takip edin.
-- **Gelişmiş Akış (Streaming) Desteği:** 
-    - **Server Streaming:** Siparişleri anlık olarak takip edin.
-    - **Client/Bidi Streaming:** Native istemciler (Postman/Node) üzerinden tam kapasite test edilebilir.
-- **Hata Yönetimi:** Standart gRPC statü kodları (`NOT_FOUND`, `FAILED_PRECONDITION`) ile dayanıklı yapı.
-- **Performans Ölçümü:** `benchmark.js` ile gRPC ve REST arasındaki devasa hız farkını ölçün.
+### 4. Kurulum Adımları
+1. **Projeyi klonlayın:**
+   ```bash
+   git clone https://github.com/emrebykdr/gRPC-Microsevices.git
+   cd gRPC-Microsevices
+   ```
+2. **Docker Kurulu Olduğundan Emin Olun:** [docker.com](https://www.docker.com/) adresinden indirebilirsiniz.
+3. **Proto Üretimi (Otomatik):** Docker build süreci `protoc` kullanarak dosyaları otomatik üretir.
 
-### 🚀 Başlangıç
-
-1. **Her şeyi Docker ile başlatın:**
+### 5. Nasıl Çalıştırılır
+1. **Tüm servisleri başlatın:**
    ```bash
    docker-compose up --build -d
    ```
 2. **Dashboard'a Erişin:**
    Tarayıcınızda [http://localhost:8081](http://localhost:8081) adresini açın.
-
-3. **Native İstemci ile Test Edin:**
+3. **Terminal İstemcisi ile Test Edin:**
    ```bash
    docker-compose exec order-service node client.js
    ```
+4. **Performans Testi (REST vs gRPC):**
+   ```bash
+   node benchmark.js
+   ```
 
----
-*Developed with ❤️ for Modern Microservices Learning.*
+### 6. Proje Yapısı Açıklaması
+- `proto/`: Tüm servisler için ortak `.proto` tanımları.
+- `order-service/`: Sipariş yönetimi yapan Node.js servisi (Port 50051).
+- `inventory-service/`: Stok ve ürün yönetimi yapan Node.js servisi (Port 50052).
+- `notification-service/`: Diller arası bildirim gönderen Python servisi (Port 50053).
+- `envoy/`: gRPC-Web köprüsü için Envoy konfigürasyonu.
+- `frontend/`: Web Dashboard kaynak kodları ve gRPC-Web mantığı.
+
+### 7. Öne Çıkan Özellikler
+- **Çok Dilli İletişim:** Node.js ve Python arasında kesintisiz ikili veri değişimi.
+- **Glassmorphism Arayüz:** Mikroservisler için modern ve duyarlı kontrol paneli.
+- **Dinamik Ürün Yönetimi:** Gerçek zamanlı ürün ekleme ve listeleme.
+- **Anlık Takip:** Sipariş durumları için Server Streaming desteği.
+- **Hata Yönetimi:** gRPC statü kodlarının tam ölçekli uygulaması.
+
+### 8. Karşılaşılan Zorluklar ve Çözümler
+- **Zorluk:** Tarayıcıların gRPC için gereken HTTP/2 Trailers özelliğini desteklememesi.
+- **Çözüm:** gRPC-Web isteklerini standart gRPC çağrılarına dönüştüren **Envoy Proxy** entegre edildi.
+- **Zorluk:** Farklı dillerdeki Docker konteynerleri arasında `.proto` dosyalarının paylaşılması.
+- **Çözüm:** **Docker Bind Mounts** ve çok aşamalı (multi-stage) build yapısı kullanılarak tüm servislerin aynı şemaya erişimi sağlandı.
+
+### 9. Kaynaklar
+- [gRPC Resmi Dokümantasyonu](https://grpc.io/docs/)
+- [Envoy Proxy gRPC-Web Filtresi](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/grpc_web_filter)
+- [Protocol Buffers Rehberi](https://developers.google.com/protocol-buffers/docs/proto3)
+- [Google Fonts (Inter)](https://fonts.google.com/specimen/Inter)
+
+### 10. Lisans
+MIT Lisansı altında dağıtılmaktadır. Daha fazla bilgi için `LICENSE` dosyasına bakınız.
