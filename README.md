@@ -11,7 +11,7 @@
 A high-performance, polyglot (Node.js & Python) microservices architecture integrated with a modern Glassmorphism Web Dashboard via Envoy Proxy. This project demonstrates real-time data streaming, cross-language binary communication, and containerized orchestration.
 
 ### 2. Screenshot / Demo
-![Dashboard Preview](https://via.placeholder.com/800x450?text=Glassmorphism+gRPC+Dashboard+Preview)
+![Dashboard Preview](./screenshots/dashboard.png)
 *(Note: Replace this with your actual dashboard screenshot at localhost:8081)*
 
 ### 3. Technologies Used
@@ -86,7 +86,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 Node.js ve Python ile inşa edilmiş, modern bir Glassmorphism Web Dashboard üzerinden Envoy Proxy aracılığıyla yönetilen, yüksek performanslı poli-glot mikroservis mimarisidir. Gerçek zamanlı veri akışı (streaming) ve diller arası ikili (binary) iletişimi gösterir.
 
 ### 2. Ekran Görüntüsü / Demo
-![Dashboard Önizleme](https://via.placeholder.com/800x450?text=Glassmorphism+gRPC+Dashboard+Görünümü)
+![Dashboard Önizleme](./screenshots/dashboard.png)
 *(Not: Bu alanı localhost:8081 adresindeki ekran görüntünüzle değiştirin)*
 
 ### 3. Kullanılan Teknolojiler
