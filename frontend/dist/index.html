@@ -20,6 +20,13 @@
 
     <main class="dashboard-container">
         <header class="dashboard-header">
+            <div class="header-top">
+                <div class="brand">
+                    <img src="logo.png" alt="Logo" class="logo">
+                    <span class="creator">Created by EmreBykdr</span>
+                </div>
+                <button class="presentation-btn" onclick="openPresentation()">📊 Sunumu Başlat</button>
+            </div>
             <h1>Microservices Control Panel</h1>
             <p class="subtitle">Real-time gRPC-Web monitoring and interaction</p>
         </header>
@@ -161,6 +168,161 @@
             </div>
         </section>
     </main>
+
+    <!-- Presentation Overlay -->
+    <div id="presentation-overlay" class="presentation-overlay">
+        <div class="presentation-controls">
+            <button class="close-pres-btn" onclick="closePresentation()">×</button>
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="slides-container" id="slides-container">
+            <!-- Slide 1: Giriş -->
+            <div class="slide active" data-slide="0">
+                <div class="slide-content intro-slide">
+                    <div class="intro-header">
+                        <img src="logo.png" alt="Logo" class="large-logo">
+                        <h2 class="creator-badge">Created by EmreBykdr</h2>
+                    </div>
+                    <h1 class="slide-title main-title">gRPC Microservices Ecosystem</h1>
+                    <p class="slide-subtitle">Modern, Yüksek Performanslı İletişim Mimarisi</p>
+                    <div class="tech-tags">
+                        <span>Node.js</span>
+                        <span>Python</span>
+                        <span>gRPC-Web</span>
+                        <span>Envoy Proxy</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Problem ve Çözüm -->
+            <div class="slide" data-slide="1">
+                <div class="slide-content">
+                    <h2 class="slide-title">Problem ve Çözüm</h2>
+                    <div class="split-view">
+                        <div class="problem-box">
+                            <h3>🚫 Problem</h3>
+                            <ul>
+                                <li>REST API'lerin JSON hantallığı</li>
+                                <li>Tip güvenliği eksikliği</li>
+                                <li>Diller arası iletişimde veri tutarsızlığı</li>
+                                <li>Yüksek gecikme süreleri (Latency)</li>
+                            </ul>
+                        </div>
+                        <div class="solution-box">
+                            <h3>✅ Çözüm</h3>
+                            <ul>
+                                <li><strong>gRPC:</strong> İkili (Binary) veri transferi</li>
+                                <li><strong>Protobuf:</strong> Güçlü tip sistemine sahip sözleşmeler</li>
+                                <li><strong>Poli-glot:</strong> Node.js ve Python'un uyumlu çalışması</li>
+                                <li><strong>HTTP/2:</strong> Multiplexing ve düşük gecikme</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Neden Bu Teknoloji? -->
+            <div class="slide" data-slide="2">
+                <div class="slide-content">
+                    <h2 class="slide-title">Neden gRPC & Envoy?</h2>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <div class="icon">⚡</div>
+                            <h4>Hız</h4>
+                            <p>JSON'a göre 7-10 kat daha hızlı serileştirme.</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="icon">📜</div>
+                            <h4>Sözleşme Tabanlı</h4>
+                            <p>.proto dosyası tüm servisler için "tek doğru kaynak".</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="icon">🌊</div>
+                            <h4>Streaming</h4>
+                            <p>Gerçek zamanlı veri akışı için yerel destek.</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="icon">🛡️</div>
+                            <h4>Envoy Gücü</h4>
+                            <p>Browser kısıtlamalarını aşan modern bir köprü.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Temel Kavramlar -->
+            <div class="slide" data-slide="3">
+                <div class="slide-content">
+                    <h2 class="slide-title">Temel Kavramlar</h2>
+                    <div class="concepts-list">
+                        <div class="concept">
+                            <strong>Protocol Buffers:</strong> Verinin nasıl paketleneceğini tanımlayan dil.
+                        </div>
+                        <div class="concept">
+                            <strong>Unary RPC:</strong> Klasik İstek-Cevap modeli.
+                        </div>
+                        <div class="concept">
+                            <strong>Server Streaming:</strong> Tek istek, sürekli veri akışı (Canlı loglar gibi).
+                        </div>
+                        <div class="concept">
+                            <strong>Envoy Proxy:</strong> gRPC-Web (Browser) ile gRPC (Server) arasındaki tercüman.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Zorluklar ve Çözümler -->
+            <div class="slide" data-slide="4">
+                <div class="slide-content">
+                    <h2 class="slide-title">Zorluklar ve Çözümler</h2>
+                    <div class="challenges-grid">
+                        <div class="challenge-card">
+                            <span class="tag">Zorluk</span>
+                            <p>Browser'ların HTTP/2 Trailers desteği yok.</p>
+                            <span class="arrow">↓</span>
+                            <span class="tag solution">Çözüm</span>
+                            <p>Envoy Proxy gRPC-Web filtresi kullanıldı.</p>
+                        </div>
+                        <div class="challenge-card">
+                            <span class="tag">Zorluk</span>
+                            <p>Poli-glot yapılarda veri şeması senkronizasyonu.</p>
+                            <span class="arrow">↓</span>
+                            <span class="tag solution">Çözüm</span>
+                            <p>Docker Volume Mounts ile .proto dosyaları paylaşıldı.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Canlı Demo ve Kapanış -->
+            <div class="slide" data-slide="5">
+                <div class="slide-content final-slide">
+                    <h2 class="slide-title">Canlı Demo Zamanı!</h2>
+                    <p>Şimdi sistemi çalışırken görelim...</p>
+                    <div class="demo-buttons">
+                        <button class="primary-btn" onclick="closePresentation()">Dashboard'a Dön</button>
+                        <a href="sunum.pdf" target="_blank" class="pdf-btn">📄 Sunumu PDF Olarak İndir</a>
+                    </div>
+                    <div class="qa-section">
+                        <h3>Sorularınız?</h3>
+                        <p>Dinlediğiniz için teşekkürler!</p>
+                        <div class="footer-info">
+                            <span>EmreBykdr © 2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="presentation-nav">
+            <button class="nav-btn prev" onclick="prevSlide()">← Geri</button>
+            <span id="slide-indicator">1 / 6</span>
+            <button class="nav-btn next" onclick="nextSlide()">İleri →</button>
+        </div>
+    </div>
 
     <script src="main.js"></script>
 </body>

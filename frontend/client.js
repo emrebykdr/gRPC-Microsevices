@@ -237,6 +237,72 @@ window.clearLogs = function() {
     addLog("Sistem hazır. Lütfen bir işlem seçin.");
 };
 
+// --- Presentation Logic ---
+let currentSlide = 0;
+const totalSlides = 6;
+
+window.openPresentation = function() {
+    const overlay = document.getElementById('presentation-overlay');
+    overlay.style.display = 'flex';
+    setTimeout(() => {
+        overlay.classList.add('active');
+    }, 10);
+    currentSlide = 0;
+    showSlide(0);
+};
+
+window.closePresentation = function() {
+    const overlay = document.getElementById('presentation-overlay');
+    overlay.classList.remove('active');
+    setTimeout(() => {
+        overlay.style.display = 'none';
+    }, 400);
+};
+
+window.nextSlide = function() {
+    if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        showSlide(currentSlide);
+    }
+};
+
+window.prevSlide = function() {
+    if (currentSlide > 0) {
+        currentSlide--;
+        showSlide(currentSlide);
+    }
+};
+
+function showSlide(index) {
+    const slides = document.querySelectorAll('.slide');
+    slides.forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none';
+    });
+    
+    const activeSlide = document.querySelector(`.slide[data-slide="${index}"]`);
+    activeSlide.style.display = 'flex';
+    setTimeout(() => {
+        activeSlide.classList.add('active');
+    }, 50);
+
+    // Update indicator
+    document.getElementById('slide-indicator').innerText = `${index + 1} / ${totalSlides}`;
+    
+    // Update progress bar
+    const progress = ((index + 1) / totalSlides) * 100;
+    document.getElementById('progress-bar').style.width = `${progress}%`;
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (document.getElementById('presentation-overlay').classList.contains('active')) {
+        if (e.key === 'ArrowRight' || e.key === ' ') window.nextSlide();
+        if (e.key === 'ArrowLeft') window.prevSlide();
+        if (e.key === 'Escape') window.closePresentation();
+    }
+});
+
 // Initial log
 addLog("Sistem hazır. Lütfen bir işlem seçin.");
 window.listProducts();
