@@ -70,7 +70,7 @@ services:
         condition: service_healthy
     restart: on-failure
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:9901/ready || exit 1"]
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/9901' 2>/dev/null"]
       interval: 10s
       timeout: 5s
       retries: 5
