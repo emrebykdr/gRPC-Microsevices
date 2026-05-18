@@ -1,6 +1,36 @@
-version: '3.8'
-
 services:
+  inventory-service:
+    build:
+      context: .
+      dockerfile: inventory-service/Dockerfile
+    ports:
+      - "50052:50052"
+    networks:
+      - grpc-net
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "node", "-e", "const n=require('net');const c=n.createConnection(50052,'localhost');c.on('connect',()=>{c.destroy();process.exit(0)});c.on('error',()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+    ports:
+      - "50053:50053"
+    networks:
+      - grpc-net
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket,sys;s=socket.socket();s.settimeout(3);s.connect(('localhost',50053));s.close();sys.exit(0)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
   order-service:
     build:
       context: .
@@ -12,31 +42,19 @@ services:
       - INVENTORY_HOST=inventory-service:50052
       - NOTIFICATION_HOST=notification-service:50053
     depends_on:
-      - inventory-service
-      - notification-service
+      inventory-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
     networks:
       - grpc-net
     restart: on-failure
-
-  inventory-service:
-    build:
-      context: .
-      dockerfile: inventory-service/Dockerfile
-    ports:
-      - "50052:50052"
-    networks:
-      - grpc-net
-    restart: on-failure
-
-  notification-service:
-    build:
-      context: .
-      dockerfile: notification-service/Dockerfile
-    ports:
-      - "50053:50053"
-    networks:
-      - grpc-net
-    restart: on-failure
+    healthcheck:
+      test: ["CMD", "node", "-e", "const n=require('net');const c=n.createConnection(50051,'localhost');c.on('connect',()=>{c.destroy();process.exit(0)});c.on('error',()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   envoy:
     image: envoyproxy/envoy:v1.31.0
@@ -48,7 +66,15 @@ services:
     networks:
       - grpc-net
     depends_on:
-      - order-service
+      order-service:
+        condition: service_healthy
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9901/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   frontend:
     build:
@@ -58,6 +84,15 @@ services:
       - "8081:8081"
     networks:
       - grpc-net
+    depends_on:
+      envoy:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8081/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 networks:
   grpc-net:

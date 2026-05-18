@@ -169,7 +169,7 @@ function main() {
   });
 
   app.listen(3001, '0.0.0.0', () => {
-    console.log("Order Service (REST API) started on port 3000");
+    console.log("Order Service (REST API) started on port 3001");
   });
 }
 

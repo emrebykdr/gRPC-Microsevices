@@ -8,7 +8,9 @@ const { SendNotificationRequest } = require('./generated/notification_pb.js');
 const { NotificationServiceClient } = require('./generated/notification_grpc_web_pb.js');
 
 // Clients
-const ENVOY_URL = 'http://localhost:8080';
+const ENVOY_URL = (typeof window !== 'undefined' && window.location.hostname === 'localhost')
+  ? 'http://localhost:8080'
+  : 'https://emrebykdr.dev/grpc-api';
 const orderClient = new OrderServiceClient(ENVOY_URL);
 const inventoryClient = new InventoryServiceClient(ENVOY_URL);
 const notificationClient = new NotificationServiceClient(ENVOY_URL);
