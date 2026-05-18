@@ -9,7 +9,7 @@ services:
       - grpc-net
     restart: on-failure
     healthcheck:
-      test: ["CMD", "node", "-e", "const n=require('net');const c=n.createConnection(50052,'localhost');c.on('connect',()=>{c.destroy();process.exit(0)});c.on('error',()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "const n=require('net');const c=n.createConnection(50052,'127.0.0.1');c.on('connect',()=>{c.destroy();process.exit(0)});c.on('error',()=>process.exit(1))"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -50,7 +50,7 @@ services:
       - grpc-net
     restart: on-failure
     healthcheck:
-      test: ["CMD", "node", "-e", "const n=require('net');const c=n.createConnection(50051,'localhost');c.on('connect',()=>{c.destroy();process.exit(0)});c.on('error',()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "const n=require('net');const c=n.createConnection(50051,'127.0.0.1');c.on('connect',()=>{c.destroy();process.exit(0)});c.on('error',()=>process.exit(1))"]
       interval: 10s
       timeout: 5s
       retries: 5
